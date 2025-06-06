@@ -14,14 +14,14 @@ export default function TermsOfService() {
           <section className="mb-10">
             <h2 className="text-2xl font-semibold text-gray-900 mb-4">1. Introduction</h2>
             <p className="mb-4">
-              Welcome to LegalPro ("Company", "we", "our", "us"). These Terms of Service ("Terms", "Terms of Service")
-              govern your use of our website located at www.legalpro.com (together or individually "Service") operated
+              Welcome to LegalPro (ompany, we, our, us). These Terms of Service (Terms, Terms of Service)
+              govern your use of our website located at www.legalpro.com (together or individually Service) operated
               by LegalPro.
             </p>
             <p className="mb-4">
               Our Privacy Policy also governs your use of our Service and explains how we collect, safeguard and
               disclose information that results from your use of our web pages. Your agreement with us includes these
-              Terms and our Privacy Policy ("Agreements"). You acknowledge that you have read and understood Agreements,
+              Terms and our Privacy Policy (Agreements). You acknowledge that you have read and understood Agreements,
               and agree to be bound by them.
             </p>
             <p>
@@ -57,7 +57,7 @@ export default function TermsOfService() {
             </p>
             <p>
               Past results do not guarantee future outcomes. Every case is unique and must be evaluated on its own
-              merits. The outcome of a particular case cannot be predicated upon a lawyer's or a law firm's past
+              merits. The outcome of a particular case cannot be predicated upon a lawyer s or a law firm s past
               results.
             </p>
           </section>
@@ -65,7 +65,7 @@ export default function TermsOfService() {
           <section className="mb-10">
             <h2 className="text-2xl font-semibold text-gray-900 mb-4">4. Purchases</h2>
             <p className="mb-4">
-              If you wish to purchase any product or service made available through Service ("Purchase"), you may be
+              If you wish to purchase any product or service made available through Service (Purchase), you may be
               asked to supply certain information relevant to your Purchase including, without limitation, your credit
               card number, the expiration date of your credit card, your billing address, and your shipping information.
             </p>
