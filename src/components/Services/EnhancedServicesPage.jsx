@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect, useMemo, useRef } from "react"
 import {
   Search,
   FilterList,
@@ -15,6 +15,12 @@ import {
   TrendingUp,
   Verified,
   Close,
+  ArrowBack,
+  CheckCircle,
+  Info,
+  AccessTime,
+  AttachMoney,
+  Gavel,
 } from "@mui/icons-material"
 import { servicesData, categories, subcategories, sortOptions } from "@/data/services"
 
@@ -25,8 +31,9 @@ export default function EnhancedServicesPage() {
   const [selectedSubcategory, setSelectedSubcategory] = useState("All")
   const [sortBy, setSortBy] = useState("popular")
   const [showFilters, setShowFilters] = useState(false)
-  const [expandedService, setExpandedService] = useState(null)
+  const [flippedCards, setFlippedCards] = useState({})
   const [isMobile, setIsMobile] = useState(false)
+  const cardsRef = useRef({})
 
   // Check if mobile
   useEffect(() => {
@@ -36,6 +43,34 @@ export default function EnhancedServicesPage() {
     checkMobile()
     window.addEventListener("resize", checkMobile)
     return () => window.removeEventListener("resize", checkMobile)
+  }, [])
+
+  // Handle click outside to reset flipped cards
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      const clickedOnCard = Object.keys(cardsRef.current).some((id) => {
+        const cardRef = cardsRef.current[id]
+        return cardRef && cardRef.contains(event.target)
+      })
+
+      if (!clickedOnCard) {
+        setFlippedCards({})
+      }
+    }
+
+    const handleEscKey = (event) => {
+      if (event.key === "Escape") {
+        setFlippedCards({})
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside)
+    document.addEventListener("keydown", handleEscKey)
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+      document.removeEventListener("keydown", handleEscKey)
+    }
   }, [])
 
   // Get available subcategories based on selected category
@@ -100,6 +135,15 @@ export default function EnhancedServicesPage() {
     const message = `Hi! I'm interested in your ${service.title} service. Could you please provide more information about the process, timeline, and pricing? I would also like to schedule a consultation to discuss my specific requirements.`
     const encodedMessage = encodeURIComponent(message)
     window.open(`https://wa.me/919876543210?text=${encodedMessage}`, "_blank")
+  }
+
+  // Toggle card flip
+  const toggleCardFlip = (serviceId, event) => {
+    event.stopPropagation()
+    setFlippedCards((prev) => ({
+      ...prev,
+      [serviceId]: !prev[serviceId],
+    }))
   }
 
   // Get service icon
@@ -276,105 +320,231 @@ export default function EnhancedServicesPage() {
           </div>
         </div>
 
-        {/* Services Grid - Changed from xl:grid-cols-4 to lg:grid-cols-3 */}
+        {/* Services Grid */}
         {filteredAndSortedServices.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {filteredAndSortedServices.map((service) => (
               <div
                 key={service.id}
-                className="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden flex flex-col"
+                ref={(el) => (cardsRef.current[service.id] = el)}
+                className="h-[420px] sm:h-[450px] w-full"
+                style={{ perspective: "1000px" }}
               >
-                {/* Service Header */}
-                <div className="p-4 sm:p-6 flex-1 flex flex-col">
-                  <div className="flex items-start justify-between mb-3 sm:mb-4">
-                    <div className="flex items-center flex-1 min-w-0">
-                      <div className="p-2 rounded-lg bg-blue-50 mr-3 flex-shrink-0">{getServiceIcon(service.icon)}</div>
-                      <div className="min-w-0 flex-1">
-                        {service.popular && (
-                          <span className="inline-block px-2 py-1 text-xs font-medium bg-orange-100 text-orange-800 rounded-full mb-1">
-                            Popular
-                          </span>
-                        )}
-                        <h3 className="text-base sm:text-lg font-semibold text-gray-900 line-clamp-2">
-                          {service.title}
-                        </h3>
+                <div
+                  className={`relative w-full h-full transition-transform duration-700 ${
+                    flippedCards[service.id] ? "" : ""
+                  }`}
+                  style={{
+                    transformStyle: "preserve-3d",
+                    transform: flippedCards[service.id] ? "rotateY(180deg)" : "rotateY(0deg)",
+                  }}
+                >
+                  {/* Front of Card */}
+                  <div
+                    className="absolute w-full h-full bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden flex flex-col p-4 sm:p-6"
+                    style={{ backfaceVisibility: "hidden" }}
+                  >
+                    <div className="flex items-start justify-between mb-3 sm:mb-4">
+                      <div className="flex items-center flex-1 min-w-0">
+                        <div className="p-2 rounded-lg bg-blue-50 mr-3 flex-shrink-0">
+                          {getServiceIcon(service.icon)}
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          {service.popular && (
+                            <span className="inline-block px-2 py-1 text-xs font-medium bg-orange-100 text-orange-800 rounded-full mb-1">
+                              Popular
+                            </span>
+                          )}
+                          <h3 className="text-base sm:text-lg font-semibold text-gray-900 line-clamp-2">
+                            {service.title}
+                          </h3>
+                        </div>
                       </div>
                     </div>
+
+                    <p className="text-gray-600 mb-3 sm:mb-4 text-sm sm:text-base line-clamp-3 flex-1">
+                      {service.description}
+                    </p>
+
+                    {/* Service Stats */}
+                    <div className="flex flex-wrap items-center gap-2 sm:gap-4 mb-3 sm:mb-4 text-xs sm:text-sm text-gray-500">
+                      <div className="flex items-center">
+                        <Star className="h-3 w-3 sm:h-4 sm:w-4 text-yellow-400 mr-1" />
+                        <span>{service.rating}</span>
+                      </div>
+                      <div className="flex items-center">
+                        <People className="h-3 w-3 sm:h-4 sm:w-4 text-blue-600 mr-1" />
+                        <span>{service.clientsServed}+ clients</span>
+                      </div>
+                      <div className="flex items-center">
+                        <Schedule className="h-3 w-3 sm:h-4 sm:w-4 text-green-600 mr-1" />
+                        <span className="truncate">{service.duration}</span>
+                      </div>
+                    </div>
+
+                    {/* Category Badge */}
+                    <div className="mb-3 sm:mb-4">
+                      <span className="inline-block px-2 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded-full">
+                        {service.category}
+                      </span>
+                    </div>
+
+                    {/* View Details Button */}
+                    <button
+                      onClick={(e) => toggleCardFlip(service.id, e)}
+                      className="w-full text-center py-2 px-4 bg-blue-50 hover:bg-blue-100 text-blue-600 hover:text-blue-700 rounded-lg transition-colors duration-200 text-sm font-medium flex items-center justify-center mb-3"
+                    >
+                      <span>View Details</span>
+                      <KeyboardArrowDown className="h-4 w-4 ml-1" />
+                    </button>
+
+                    {/* Action Buttons */}
+                    <div className="flex flex-col sm:flex-row gap-2">
+                      <button
+                        onClick={() => window.enquireModal.showModal()}
+                        className="flex-1 flex items-center justify-center px-3 sm:px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200 text-sm font-medium"
+                      >
+                        <Phone className="h-4 w-4 mr-2" />
+                        Enquire Now
+                      </button>
+                      <button
+                        onClick={() => handleWhatsAppClick(service)}
+                        className="flex-1 sm:flex-none flex items-center justify-center px-3 sm:px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors duration-200 text-sm font-medium"
+                      >
+                        <WhatsApp className="h-4 w-4 mr-1 sm:mr-2" />
+                        <span className="hidden sm:inline">WhatsApp</span>
+                        <span className="sm:hidden">Chat</span>
+                      </button>
+                    </div>
                   </div>
 
-                  <p className="text-gray-600 mb-3 sm:mb-4 text-sm sm:text-base line-clamp-3 flex-1">
-                    {service.description}
-                  </p>
-
-                  {/* Service Stats */}
-                  <div className="flex flex-wrap items-center gap-2 sm:gap-4 mb-3 sm:mb-4 text-xs sm:text-sm text-gray-500">
-                    <div className="flex items-center">
-                      <Star className="h-3 w-3 sm:h-4 sm:w-4 text-yellow-400 mr-1" />
-                      <span>{service.rating}</span>
-                    </div>
-                    <div className="flex items-center">
-                      <People className="h-3 w-3 sm:h-4 sm:w-4 text-blue-600 mr-1" />
-                      <span>{service.clientsServed}+ clients</span>
-                    </div>
-                    <div className="flex items-center">
-                      <Schedule className="h-3 w-3 sm:h-4 sm:w-4 text-green-600 mr-1" />
-                      <span className="truncate">{service.duration}</span>
-                    </div>
-                  </div>
-
-                  {/* Category Badge */}
-                  <div className="mb-3 sm:mb-4">
-                    <span className="inline-block px-2 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded-full">
-                      {service.category}
-                    </span>
-                  </div>
-
-                  {/* Expand/Collapse Button */}
-                  <button
-                    onClick={() => setExpandedService(expandedService === service.id ? null : service.id)}
-                    className="w-full text-left text-blue-600 hover:text-blue-800 text-xs sm:text-sm font-medium mb-3 sm:mb-4 flex items-center justify-between"
+                  {/* Back of Card */}
+                  <div
+                    className="absolute w-full h-full bg-white rounded-xl border border-gray-200 shadow-lg overflow-hidden flex flex-col"
+                    style={{
+                      backfaceVisibility: "hidden",
+                      transform: "rotateY(180deg)",
+                    }}
                   >
-                    <span>{expandedService === service.id ? "Show Less" : "View Details"}</span>
-                    {expandedService === service.id ? (
-                      <KeyboardArrowUp className="h-4 w-4" />
-                    ) : (
-                      <KeyboardArrowDown className="h-4 w-4" />
-                    )}
-                  </button>
-
-                  {/* Expanded Details */}
-                  {expandedService === service.id && (
-                    <div className="mb-4 p-3 sm:p-4 bg-gray-50 rounded-lg">
-                      <p className="text-gray-700 mb-3 text-sm">{service.detailedDescription}</p>
-                      <h4 className="font-medium text-gray-900 mb-2 text-sm">What's Included:</h4>
-                      <ul className="space-y-1">
-                        {service.features.map((feature, index) => (
-                          <li key={index} className="flex items-start text-xs sm:text-sm text-gray-600">
-                            <span className="w-1.5 h-1.5 bg-blue-600 rounded-full mt-1.5 mr-2 flex-shrink-0"></span>
-                            <span className="flex-1">{feature}</span>
-                          </li>
-                        ))}
-                      </ul>
+                    {/* Back Header */}
+                    <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-4 text-white">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-lg font-semibold truncate flex-1">{service.title}</h3>
+                        <button
+                          onClick={(e) => toggleCardFlip(service.id, e)}
+                          className="p-1 rounded-full bg-white/20 hover:bg-white/30 transition-colors duration-200 flex items-center justify-center"
+                          aria-label="Close details"
+                        >
+                          <Close className="h-4 w-4 text-white" />
+                        </button>
+                      </div>
                     </div>
-                  )}
 
-                  {/* Action Buttons */}
-                  <div className="flex flex-col sm:flex-row gap-2 mt-auto">
-                    <button
-                      onClick={() => window.enquireModal.showModal()}
-                      className="flex-1 flex items-center justify-center px-3 sm:px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200 text-sm font-medium"
-                    >
-                      <Phone className="h-4 w-4 mr-2" />
-                      Enquire Now
-                    </button>
-                    <button
-                      onClick={() => handleWhatsAppClick(service)}
-                      className="flex-1 sm:flex-none flex items-center justify-center px-3 sm:px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors duration-200 text-sm font-medium"
-                    >
-                      <WhatsApp className="h-4 w-4 mr-1 sm:mr-2" />
-                      <span className="hidden sm:inline">WhatsApp</span>
-                      <span className="sm:hidden">Chat</span>
-                    </button>
+                    {/* Back Content - Scrollable */}
+                    <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                      {/* Service Description */}
+                      <div className="space-y-2">
+                        <div className="flex items-start">
+                          <Info className="h-5 w-5 text-blue-600 mr-2 flex-shrink-0 mt-0.5" />
+                          <p className="text-gray-700 text-sm">{service.detailedDescription}</p>
+                        </div>
+                      </div>
+
+                      {/* Service Details */}
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="bg-gray-50 p-3 rounded-lg">
+                          <div className="flex items-center mb-1">
+                            <AccessTime className="h-4 w-4 text-blue-600 mr-1" />
+                            <span className="text-xs font-medium text-gray-700">Timeline</span>
+                          </div>
+                          <p className="text-xs text-gray-600">{service.duration}</p>
+                        </div>
+                        <div className="bg-gray-50 p-3 rounded-lg">
+                          <div className="flex items-center mb-1">
+                            <AttachMoney className="h-4 w-4 text-green-600 mr-1" />
+                            <span className="text-xs font-medium text-gray-700">Pricing</span>
+                          </div>
+                          <p className="text-xs text-gray-600">Customized quote</p>
+                        </div>
+                      </div>
+
+                      {/* What's Included */}
+                      <div className="space-y-2">
+                        <h4 className="font-medium text-gray-900 text-sm flex items-center">
+                          <CheckCircle className="h-4 w-4 text-green-500 mr-1" />
+                          What's Included:
+                        </h4>
+                        <ul className="space-y-2 pl-2">
+                          {service.features.map((feature, index) => (
+                            <li key={index} className="flex items-start text-xs text-gray-600">
+                              <span className="w-1.5 h-1.5 bg-blue-600 rounded-full mt-1.5 mr-2 flex-shrink-0"></span>
+                              <span className="flex-1">{feature}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      {/* Legal Process */}
+                      <div className="space-y-2">
+                        <h4 className="font-medium text-gray-900 text-sm flex items-center">
+                          <Gavel className="h-4 w-4 text-blue-600 mr-1" />
+                          Legal Process:
+                        </h4>
+                        <ol className="space-y-2 pl-2">
+                          <li className="flex items-start text-xs text-gray-600">
+                            <span className="flex-shrink-0 flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 text-blue-600 mr-2 text-xs font-medium">
+                              1
+                            </span>
+                            <span className="flex-1">Initial consultation to understand your requirements</span>
+                          </li>
+                          <li className="flex items-start text-xs text-gray-600">
+                            <span className="flex-shrink-0 flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 text-blue-600 mr-2 text-xs font-medium">
+                              2
+                            </span>
+                            <span className="flex-1">Document preparation and legal research</span>
+                          </li>
+                          <li className="flex items-start text-xs text-gray-600">
+                            <span className="flex-shrink-0 flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 text-blue-600 mr-2 text-xs font-medium">
+                              3
+                            </span>
+                            <span className="flex-1">Filing and representation as needed</span>
+                          </li>
+                          <li className="flex items-start text-xs text-gray-600">
+                            <span className="flex-shrink-0 flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 text-blue-600 mr-2 text-xs font-medium">
+                              4
+                            </span>
+                            <span className="flex-1">Regular updates and case management</span>
+                          </li>
+                        </ol>
+                      </div>
+                    </div>
+
+                    {/* Back Footer */}
+                    <div className="p-4 border-t border-gray-200 bg-gray-50">
+                      <div className="flex flex-col sm:flex-row gap-2">
+                        <button
+                          onClick={() => window.enquireModal.showModal()}
+                          className="flex-1 flex items-center justify-center px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200 text-sm font-medium"
+                        >
+                          <Phone className="h-4 w-4 mr-2" />
+                          Enquire Now
+                        </button>
+                        <button
+                          onClick={() => handleWhatsAppClick(service)}
+                          className="flex-1 flex items-center justify-center px-3 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors duration-200 text-sm font-medium"
+                        >
+                          <WhatsApp className="h-4 w-4 mr-2" />
+                          WhatsApp
+                        </button>
+                      </div>
+                      <button
+                        onClick={(e) => toggleCardFlip(service.id, e)}
+                        className="w-full mt-2 flex items-center justify-center px-3 py-2 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200 text-sm"
+                      >
+                        <ArrowBack className="h-4 w-4 mr-2" />
+                        Back to Service
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
