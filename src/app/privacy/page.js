@@ -141,7 +141,7 @@ export default function PrivacyPolicy() {
               </p>
             </div>
             <p className="mt-6">
-              You have the right to make a complaint at any time to the Information Commissioner's Office (ICO), the
+              You have the right to make a complaint at any time to the Information Commissioner s Office (ICO), the
               Indian supervisory authority for data protection issues. We would, however, appreciate the chance to deal
               with your concerns before you approach the ICO so please contact us in the first instance.
             </p>
