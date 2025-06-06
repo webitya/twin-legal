@@ -59,7 +59,7 @@ export default function HomepageHero() {
             className={`transform transition-all duration-1000 ${isVisible ? "translate-x-0 opacity-100" : "-translate-x-10 opacity-0"}`}
           >
             {/* Trust Badges */}
-            <div className="flex flex-wrap items-center gap-6 mb-8">
+            {/* <div className="flex flex-wrap items-center gap-6 mb-8">
               <div className="flex items-center bg-white bg-opacity-80 backdrop-blur-sm rounded-full px-4 py-2 shadow-lg border border-white border-opacity-20">
                 <Star className="h-5 w-5 text-yellow-500 mr-2" />
                 <span className="text-sm font-semibold text-gray-700">4.9/5 Rating</span>
@@ -72,7 +72,7 @@ export default function HomepageHero() {
                 <EmojiEvents className="h-5 w-5 text-green-600 mr-2" />
                 <span className="text-sm font-semibold text-gray-700">15+ Years</span>
               </div>
-            </div>
+            </div> */}
 
             {/* Dynamic Heading */}
             <div className="mb-6">
@@ -132,7 +132,7 @@ export default function HomepageHero() {
             </div>
 
             {/* Quick Stats */}
-            <div className="mt-12 grid grid-cols-3 gap-6">
+            {/* <div className="mt-12 grid grid-cols-3 gap-6">
               {[
                 { number: "1000+", label: "Cases Solved" },
                 { number: "98%", label: "Success Rate" },
@@ -143,7 +143,7 @@ export default function HomepageHero() {
                   <div className="text-sm text-gray-600 font-medium">{stat.label}</div>
                 </div>
               ))}
-            </div>
+            </div> */}
           </div>
 
           {/* Right Content - Enhanced Image Section */}

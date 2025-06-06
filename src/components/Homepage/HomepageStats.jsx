@@ -14,7 +14,7 @@ export default function HomepageStats() {
       label: "Happy Clients",
       description: "Satisfied customers across Jharkhand",
       icon: <People className="h-6 w-6" />,
-      color: "from-blue-500 to-blue-600",
+      color: "bg-blue-500",
     },
     {
       number: 1000,
@@ -22,7 +22,7 @@ export default function HomepageStats() {
       label: "Cases Resolved",
       description: "Successfully handled legal matters",
       icon: <CheckCircle className="h-6 w-6" />,
-      color: "from-green-500 to-green-600",
+      color: "bg-green-500",
     },
     {
       number: 98,
@@ -30,7 +30,7 @@ export default function HomepageStats() {
       label: "Success Rate",
       description: "Winning track record",
       icon: <TrendingUp className="h-6 w-6" />,
-      color: "from-purple-500 to-purple-600",
+      color: "bg-purple-500",
     },
     {
       number: 15,
@@ -38,7 +38,7 @@ export default function HomepageStats() {
       label: "Years Experience",
       description: "Decades of legal expertise",
       icon: <Schedule className="h-6 w-6" />,
-      color: "from-orange-500 to-orange-600",
+      color: "bg-orange-500",
     },
   ]
 
@@ -86,7 +86,7 @@ export default function HomepageStats() {
   return (
     <section
       id="stats-section"
-      className="py-20 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 relative overflow-hidden"
+      className="py-20 bg-gradient-to-r from-blue-600 via-blue-500 to-purple-600 relative overflow-hidden"
     >
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
@@ -104,73 +104,52 @@ export default function HomepageStats() {
         style={{ animationDuration: "4s" }}
       ></div>
       <div
-        className="absolute top-20 right-20 w-16 h-16 bg-blue-300 bg-opacity-20 rounded-full animate-pulse"
+        className="absolute bottom-10 right-10 w-16 h-16 bg-white bg-opacity-10 rounded-full animate-pulse"
         style={{ animationDelay: "2s", animationDuration: "5s" }}
-      ></div>
-      <div
-        className="absolute bottom-20 left-20 w-12 h-12 bg-purple-300 bg-opacity-20 rounded-full animate-pulse"
-        style={{ animationDelay: "1s", animationDuration: "3s" }}
       ></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div
-          className={`text-center mb-16 transform transition-all duration-1000 ${isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"}`}
-        >
+        <div className="text-center mb-16">
           <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">Our Track Record Speaks</h2>
-          <p className="text-xl text-blue-100 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl text-white text-opacity-90 max-w-3xl mx-auto leading-relaxed">
             Numbers that demonstrate our commitment to excellence and client satisfaction in Ranchi
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {stats.map((stat, index) => (
-            <div
-              key={index}
-              className={`group relative transform transition-all duration-700 ${isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"}`}
-              style={{ transitionDelay: `${index * 200}ms` }}
-            >
-              <div className="relative bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-8 border border-white border-opacity-20 hover:bg-opacity-20 transition-all duration-500 group-hover:scale-105">
+            <div key={index} className="group">
+              <div className="bg-white rounded-xl p-8 h-full flex flex-col items-center">
                 {/* Icon */}
                 <div
-                  className={`inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r ${stat.color} rounded-xl mb-6 text-white group-hover:scale-110 transition-transform duration-300`}
+                  className={`inline-flex items-center justify-center w-12 h-12 ${stat.color} rounded-lg mb-6 text-white`}
                 >
                   {stat.icon}
                 </div>
 
-                {/* Number */}
-                <div className="text-4xl lg:text-5xl font-bold text-white mb-2">
+                {/* Number - Intentionally left out to match the screenshot */}
+                <div className="text-4xl lg:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 mb-2 opacity-0 h-0">
                   {counters[index]}
                   {stat.suffix}
                 </div>
 
-                {/* Label */}
-                <div className="text-xl font-semibold text-white mb-2">{stat.label}</div>
-
                 {/* Description */}
-                <div className="text-blue-100 text-sm leading-relaxed">{stat.description}</div>
-
-                {/* Hover Effect */}
-                <div
-                  className={`absolute inset-0 bg-gradient-to-r ${stat.color} opacity-0 group-hover:opacity-10 rounded-2xl transition-opacity duration-500`}
-                ></div>
+                <div className="text-gray-600 text-sm leading-relaxed text-center mt-auto">{stat.description}</div>
               </div>
             </div>
           ))}
         </div>
 
         {/* Bottom Section */}
-        <div
-          className={`text-center mt-16 transform transition-all duration-1000 ${isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"}`}
-          style={{ transitionDelay: "800ms" }}
-        >
-          <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-8 border border-white border-opacity-20 max-w-2xl mx-auto">
-            <h3 className="text-2xl font-bold text-white mb-4">Ready to Join Our Success Stories?</h3>
-            <p className="text-blue-100 mb-6">
+        <div className="text-center mt-16">
+          <div className="bg-white rounded-xl p-8 max-w-2xl mx-auto">
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">Ready to Join Our Success Stories?</h3>
+            <p className="text-gray-600 mb-6">
               Let us help you achieve the legal outcomes you deserve with our proven expertise.
             </p>
             <button
               onClick={() => window.enquireModal.showModal()}
-              className="inline-flex items-center px-8 py-3 bg-white text-blue-600 font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+              className="inline-flex items-center px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
             >
               Start Your Case Today
             </button>
