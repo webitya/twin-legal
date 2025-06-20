@@ -1,11 +1,13 @@
-import EnhancedServicesPage from "@/components/Services/EnhancedServicesPage"
-import WhatsAppButton from "@/components/Shared/WhatsAppButton"
+import ServicesHero from "@/components/services/ServicesHero"
+import ServicesGrid from "@/components/services/ServicesGrid"
+import ServicesCTA from "@/components/services/ServicesCTA"
 
-export default function Services() {
+export default function ServicesPage() {
   return (
-    <div className="min-h-screen">
-      <EnhancedServicesPage />
-      <WhatsAppButton />
+    <div>
+      <ServicesHero />
+      <ServicesGrid />
+      <ServicesCTA />
     </div>
   )
 }

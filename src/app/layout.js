@@ -1,25 +1,22 @@
-import { Inter } from "next/font/google"
-import Navbar from "@/components/Shared/Navbar"
-import Footer from "@/components/Shared/Footer"
-import EnquireModal from "@/components/Shared/EnquireModal"
-import "@/app/globals.css"
-
-const inter = Inter({ subsets: ["latin"] })
+import "./globals.css"
+import Header from "@/components/shared/Header"
+import Footer from "@/components/shared/Footer"
+import SocialIcons from "@/components/shared/SocialIcons"
 
 export const metadata = {
-  title: "LegalPro Services",
-  description: "Professional legal services for all your needs",
+  title: "KUMAR Fin. Consultant - Professional Financial & Legal Services",
+  description: "Expert accounting, taxation, GST, and legal compliance services by Pappu Kumar Consultant",
     generator: 'v0.dev'
 }
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-gray-50`}>
-        <Navbar />
+      <body className="min-h-screen bg-gray-50">
+        <Header />
         <main>{children}</main>
         <Footer />
-        <EnquireModal />
+        <SocialIcons />
       </body>
     </html>
   )
