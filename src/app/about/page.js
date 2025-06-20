@@ -1,4 +1,4 @@
-import AboutHero from "@/components/about/AboutHero"
+import AboutHero from "@/components/about/AboutHero.jsx"
 import AboutContent from "@/components/about/AboutContent"
 import AboutCTA from "@/components/about/AboutCTA"
 
